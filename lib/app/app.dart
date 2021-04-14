@@ -8,6 +8,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:friendly_cards/counter/widget/card.dart';
+import 'package:friendly_cards/counter/widget/example_draggable.dart';
+import 'package:friendly_cards/counter/widget/slidable_animated_cards.dart';
 import 'package:friendly_cards/l10n/l10n.dart';
 
 class App extends StatelessWidget {
@@ -25,7 +27,7 @@ class App extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      home: MyHomePage(),
+      home: SlidableAnimatedCards(),
     );
   }
 }
