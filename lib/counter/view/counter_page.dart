@@ -8,7 +8,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friendly_cards/counter/counter.dart';
-import 'package:friendly_cards/counter/widget/card.dart';
 import 'package:friendly_cards/l10n/l10n.dart';
 
 class CounterPage extends StatelessWidget {
