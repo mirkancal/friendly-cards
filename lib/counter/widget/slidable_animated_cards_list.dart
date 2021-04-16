@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:friendly_cards/color_constants.dart';
 import 'package:friendly_cards/counter/widget/slidable_animated_card.dart';
 import 'package:friendly_cards/models/friendly_card.dart';
+import 'package:friendly_cards/services/friendly_cards_service.dart';
+import 'package:loading_animations/loading_animations.dart';
 
 import 'friendly_card_widget.dart';
 
@@ -17,35 +19,25 @@ class SlidableAnimatedCardsList extends StatefulWidget {
 
 class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
     with TickerProviderStateMixin {
-  late final List<SlidableAnimatedCard> cards = List.generate(
-    10,
-    (index) {
-      backgroundColor = generatedColors[0];
-      return SlidableAnimatedCard(
-        removeCard: _removeCard,
-        child: FriendlyCardWidget(
-          careCard: FriendlyCard(
-              color: generatedColors[index].withOpacity(1),
-              content: 'This is an example content',
-              title: 'Example Title $index'),
-        ),
-      );
-    },
-  );
+  late List<SlidableAnimatedCard> cards;
 
   late final generatedColors = randomColorGenerator(10);
 
   int colorIndex = 0;
 
+  bool isRotation = false;
+  bool isOpacity = false;
+
+  late Color backgroundColor;
   late final AnimationController rotationController;
   late final AnimationController opacityController;
   late final TweenSequence tweenRotation;
   late final Animation<double> rotationAnimation;
   late final Animation<double> opacityAnimation;
-  bool isRotation = false;
-  bool isOpacity = false;
 
-  Color backgroundColor = Colors.white;
+  late final FriendlyCardsService friendlyCardsService;
+
+  late final Future<List<SlidableAnimatedCard>> friendlyCards;
 
   List<Color> randomColorGenerator(int amount) {
     return List.generate(amount, (index) => friendlyCardColorList[index % 7])
@@ -54,6 +46,25 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
 
   @override
   void initState() {
+    friendlyCardsService = FriendlyCardsService();
+    friendlyCards = friendlyCardsService.getFriendlyCards().then((cards) {
+      return List.generate(
+        cards.length,
+        (index) {
+          backgroundColor = generatedColors[0];
+          return SlidableAnimatedCard(
+            removeCard: _removeCard,
+            child: FriendlyCardWidget(
+              color: generatedColors[index].withOpacity(1),
+              careCard: FriendlyCard(
+                  body: cards[index].body, title: cards[index].title),
+            ),
+          );
+        },
+      ).toList();
+    });
+
+    backgroundColor = generatedColors[0];
     rotationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 200));
     opacityController = AnimationController(
@@ -94,48 +105,84 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
   void _removeCard() {
     setState(() {
       cards.removeAt(0);
-      colorIndex += 1;
 
+      colorIndex += 1;
       backgroundColor = generatedColors[colorIndex % 10];
+
       rotationController.forward();
       opacityController.forward();
     });
   }
 
   @override
+  void dispose() {
+    rotationController.dispose();
+    opacityController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor.withOpacity(0.3),
-      body: AnimatedBuilder(
-        animation: rotationController,
-        builder: (BuildContext context, Widget? child) {
-          return Stack(
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: Transform.rotate(
-                  angle: rotationAnimation.value,
-                  child: Card(
-                    color: const Color(0xFF705F67),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6)),
-                    child: Container(
-                      height: 300,
-                      width: 200,
+      body: FutureBuilder<List<SlidableAnimatedCard>>(
+        future: friendlyCards.then((value) => cards = value).whenComplete(
+            () => Future.delayed(const Duration(milliseconds: 500))),
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+            return AnimatedBuilder(
+              animation: rotationController,
+              builder: (BuildContext context, Widget? child) {
+                return Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Transform.rotate(
+                        angle: rotationAnimation.value,
+                        child: Card(
+                          color: const Color(0xFF705F67),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6)),
+                          child: Container(
+                            height: 450,
+                            width: 300,
+                          ),
+                        ),
+                      ),
                     ),
+                    Positioned(
+                      child: cards.isNotEmpty
+                          ? Transform.rotate(
+                              angle: rotationAnimation.value,
+                              child: Opacity(
+                                  opacity:
+                                      isOpacity ? opacityAnimation.value : 1,
+                                  child: cards.first))
+                          : Container(),
+                    )
+                  ],
+                );
+              },
+            );
+          }
+
+          return Center(
+            child: Card(
+              color: const Color(0xFF705F67),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6)),
+              child: Container(
+                height: 450,
+                width: 300,
+                child: Center(
+                  child: LoadingJumpingLine.square(
+                    size: 60,
+                    duration: const Duration(milliseconds: 600),
+                    backgroundColor: friendlyCardColorList[0],
                   ),
                 ),
               ),
-              Positioned(
-                child: cards.isNotEmpty
-                    ? Transform.rotate(
-                        angle: rotationAnimation.value,
-                        child: Opacity(
-                            opacity: isOpacity ? opacityAnimation.value : 1,
-                            child: cards.first))
-                    : Container(),
-              )
-            ],
+            ),
           );
         },
       ),

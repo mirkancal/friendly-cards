@@ -39,6 +39,12 @@ class _SlidableAnimatedCardState extends State<SlidableAnimatedCard>
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: controller,
@@ -97,7 +103,7 @@ class _SlidableAnimatedCardState extends State<SlidableAnimatedCard>
 }
 
 double rotateCardByOffset(Offset offset) {
-  print('Offset.dx: ${offset.dx},  Offset.dy: ${offset.dy}');
+  // print('Offset.dx: ${offset.dx},  Offset.dy: ${offset.dy}');
   if (offset.dy > 0 && offset.dx > 0) {
     var rotationAngle = offset.dx / 100 > 1 ? 1 : offset.dx / 100;
     return -(pi * 1 / 10) * rotationAngle;

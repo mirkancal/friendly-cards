@@ -1,10 +1,10 @@
-import 'dart:ui';
-
 class FriendlyCard {
-  const FriendlyCard(
-      {required this.title, required this.content, required this.color});
+  FriendlyCard({this.title, this.body});
 
-  final String title;
-  final String content;
-  final Color color;
+  FriendlyCard.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    body = json['body'];
+  }
+  String? body;
+  String? title;
 }
