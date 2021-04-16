@@ -63,11 +63,11 @@ class _SlidableAnimatedCardState extends State<SlidableAnimatedCard>
                 if (_swipeMeetsEscapeVelocity(
                     userDragOffset, details.velocity)) {
                   var frictionSimulation = FrictionSimulation(
-                      0.9,
+                      1.1,
                       controller.value,
-                      details.velocity.pixelsPerSecond.distance / 2);
+                      details.velocity.pixelsPerSecond.distance);
                   controller.animateWith(frictionSimulation).timeout(
-                    const Duration(seconds: 2),
+                    const Duration(milliseconds: 300),
                     onTimeout: () {
                       controller.animateBack(0.0,
                           duration: const Duration(milliseconds: 1));
