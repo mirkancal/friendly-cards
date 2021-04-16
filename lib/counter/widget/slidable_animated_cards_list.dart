@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:friendly_cards/color_constants.dart';
 import 'package:friendly_cards/counter/widget/slidable_animated_card.dart';
 import 'package:friendly_cards/models/friendly_card.dart';
 
@@ -18,17 +19,24 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
     with TickerProviderStateMixin {
   late final List<SlidableAnimatedCard> cards = List.generate(
     10,
-    (index) => SlidableAnimatedCard(
-      removeCard: _removeCard,
-      child: FriendlyCardWidget(
-        careCard: FriendlyCard(
-            color: Color((Random().nextDouble() * 0xFFFFFF).toInt())
-                .withOpacity(1),
-            content: 'This is an example content',
-            title: 'Example Title $index'),
-      ),
-    ),
+    (index) {
+      backgroundColor = generatedColors[0];
+      return SlidableAnimatedCard(
+        removeCard: _removeCard,
+        child: FriendlyCardWidget(
+          careCard: FriendlyCard(
+              color: generatedColors[index].withOpacity(1),
+              content: 'This is an example content',
+              title: 'Example Title $index'),
+        ),
+      );
+    },
   );
+
+  late final generatedColors = randomColorGenerator(10);
+
+  int colorIndex = 0;
+
   late final AnimationController rotationController;
   late final AnimationController opacityController;
   late final TweenSequence tweenRotation;
@@ -37,18 +45,25 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
   bool isRotation = false;
   bool isOpacity = false;
 
+  Color backgroundColor = Colors.white;
+
+  List<Color> randomColorGenerator(int amount) {
+    return List.generate(amount, (index) => friendlyCardColorList[index % 7])
+        .toList();
+  }
+
   @override
   void initState() {
     rotationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 300));
+        vsync: this, duration: const Duration(milliseconds: 200));
     opacityController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 300));
+        vsync: this, duration: const Duration(milliseconds: 200));
 
     opacityAnimation = Tween<double>(
       begin: 0,
       end: 1,
     ).animate(CurvedAnimation(
-        parent: opacityController, curve: const Interval(0.5, 1)));
+        parent: opacityController, curve: const Interval(0.4, 1)));
 
     rotationAnimation = Tween<double>(
       begin: 0,
@@ -79,6 +94,9 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
   void _removeCard() {
     setState(() {
       cards.removeAt(0);
+      colorIndex += 1;
+
+      backgroundColor = generatedColors[colorIndex % 10];
       rotationController.forward();
       opacityController.forward();
     });
@@ -86,38 +104,41 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: rotationController,
-      builder: (BuildContext context, Widget? child) {
-        return Stack(
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: Transform.rotate(
-                angle: rotationAnimation.value,
-                child: Card(
-                  color: const Color(0xFF705F67),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6)),
-                  child: Container(
-                    height: 300,
-                    width: 200,
+    return Scaffold(
+      backgroundColor: backgroundColor.withOpacity(0.3),
+      body: AnimatedBuilder(
+        animation: rotationController,
+        builder: (BuildContext context, Widget? child) {
+          return Stack(
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: Transform.rotate(
+                  angle: rotationAnimation.value,
+                  child: Card(
+                    color: const Color(0xFF705F67),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6)),
+                    child: Container(
+                      height: 300,
+                      width: 200,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              child: cards.isNotEmpty
-                  ? Transform.rotate(
-                      angle: rotationAnimation.value,
-                      child: Opacity(
-                          opacity: isOpacity ? opacityAnimation.value : 1,
-                          child: cards.first))
-                  : Container(),
-            )
-          ],
-        );
-      },
+              Positioned(
+                child: cards.isNotEmpty
+                    ? Transform.rotate(
+                        angle: rotationAnimation.value,
+                        child: Opacity(
+                            opacity: isOpacity ? opacityAnimation.value : 1,
+                            child: cards.first))
+                    : Container(),
+              )
+            ],
+          );
+        },
+      ),
     );
   }
 }

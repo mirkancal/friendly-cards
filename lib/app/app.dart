@@ -25,10 +25,8 @@ class App extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const Scaffold(
-        body: Center(
-          child: SlidableAnimatedCardsList(),
-        ),
+      home: const Center(
+        child: SlidableAnimatedCardsList(),
       ),
     );
   }
