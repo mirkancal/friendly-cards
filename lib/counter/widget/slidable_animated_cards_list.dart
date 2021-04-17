@@ -153,25 +153,8 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
                       alignment: Alignment.center,
                       child: Transform.rotate(
                         angle: rotationAnimation.value,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: Card(
-                            color: const Color(0xFF705F67),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6)),
-                            child: Container(
-                              height: context.currentSize.height > 700
-                                  ? context.currentSize.height > 800
-                                      ? context.currentSize.height > 850
-                                          ? 450
-                                          : 400
-                                      : 400
-                                  : context.dynamicHeight(0.55),
-                              width: context.currentSize.width * .7,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 24.0),
-                            ),
-                          ),
+                        child: const CardShape(
+                          color: Color(0xFF705F67),
                         ),
                       ),
                     ),

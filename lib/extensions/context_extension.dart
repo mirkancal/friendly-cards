@@ -6,6 +6,10 @@ extension SizeExtension on BuildContext {
   double dynamicHeight(double val) => MediaQuery.of(this).size.height * val;
 
   Size get currentSize => MediaQuery.of(this).size;
+
+  double get width => MediaQuery.of(this).size.width;
+
+  double get height => MediaQuery.of(this).size.height;
 }
 
 extension NumberExtension on BuildContext {
