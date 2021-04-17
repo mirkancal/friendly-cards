@@ -148,7 +148,9 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
                             child: Container(
                               height: context.currentSize.height > 700
                                   ? context.currentSize.height > 800
-                                      ? 450
+                                      ? context.currentSize.height > 850
+                                          ? 450
+                                          : 400
                                       : 400
                                   : context.dynamicHeight(0.65),
                               padding:
@@ -184,11 +186,12 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
                 child: Container(
                   height: context.currentSize.height > 700
                       ? context.currentSize.height > 800
-                          ? 450
+                          ? context.currentSize.height > 850
+                              ? 450
+                              : 400
                           : 400
                       : context.dynamicHeight(0.65),
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  width: 300,
                   child: Center(
                     child: LoadingJumpingLine.square(
                       size: 60,

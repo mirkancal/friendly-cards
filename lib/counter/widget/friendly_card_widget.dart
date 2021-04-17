@@ -12,8 +12,6 @@ class FriendlyCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Height : ${context.currentSize.height}');
-    print('Width : ${context.currentSize.width}');
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Card(
@@ -22,7 +20,7 @@ class FriendlyCardWidget extends StatelessWidget {
         child: Container(
           height: context.currentSize.height > 700
               ? context.currentSize.height > 800
-                  ? context.currentSize.height > 800
+                  ? context.currentSize.height > 850
                       ? 450
                       : 400
                   : 400
@@ -31,6 +29,7 @@ class FriendlyCardWidget extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
             children: [
               Text(
                 careCard.title as String,
