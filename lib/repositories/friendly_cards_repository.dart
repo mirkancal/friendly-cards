@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:friendly_cards/utils/handle_errors.dart';
 
 class FriendlyCardsRepository {

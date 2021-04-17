@@ -19,14 +19,14 @@ class FriendlyCardWidget extends StatelessWidget {
                 ? 450
                 : 400
             : 400
-        : context.dynamicHeight(0.65);
+        : context.dynamicHeight(0.55);
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Card(
         color: color,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
         child: Container(
           height: dynamicHeight.toDouble(),
+          width: context.currentSize.width * .7,
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -50,13 +50,12 @@ class FriendlyCardWidget extends StatelessWidget {
                   textAlign: TextAlign.left,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Container(
                 height: dynamicHeight.toDouble() / 3,
-                width: context.dynamicWidth(0.7),
-                child: Text(
+                child: AutoSizeText(
                   (careCard.body as String).toString().trim(),
                   style: const TextStyle(fontSize: 18, color: Colors.white),
                   textAlign: TextAlign.left,

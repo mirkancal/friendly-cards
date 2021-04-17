@@ -17,8 +17,8 @@ class FriendlyCardsService {
           (body as List).map((e) => FriendlyCard.fromJson(e)).toList();
       return friendlyCards;
     } catch (e) {
-      return [];
       print(e);
+      return [];
     }
   }
 }
