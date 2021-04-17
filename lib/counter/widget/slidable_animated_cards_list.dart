@@ -21,14 +21,14 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
     with TickerProviderStateMixin {
   late List<SlidableAnimatedCard> cards;
 
-  late final generatedColors = randomColorGenerator(10);
+  late final List<Color> generatedColors;
 
-  int colorIndex = 0;
+  int currentIndex = 0;
 
   bool isRotation = false;
   bool isOpacity = false;
-
-  late Color backgroundColor;
+  bool isFirstTime = true;
+  late Color backgroundColor = Colors.white;
   late final AnimationController rotationController;
   late final AnimationController opacityController;
   late final TweenSequence tweenRotation;
@@ -39,6 +39,9 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
 
   late final Future<List<SlidableAnimatedCard>> friendlyCards;
 
+  late SlidableAnimatedCard currentCard;
+  late List<SlidableAnimatedCard> loopedCards;
+
   List<Color> randomColorGenerator(int amount) {
     return List.generate(amount, (index) => friendlyCardColorList[index % 7])
         .toList();
@@ -48,10 +51,12 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
   void initState() {
     friendlyCardsService = FriendlyCardsService();
     friendlyCards = friendlyCardsService.getFriendlyCards().then((cards) {
+      generatedColors = randomColorGenerator(cards.length);
+      backgroundColor = generatedColors[0];
+
       return List.generate(
         cards.length,
         (index) {
-          backgroundColor = generatedColors[0];
           return SlidableAnimatedCard(
             removeCard: _removeCard,
             child: FriendlyCardWidget(
@@ -64,7 +69,6 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
       ).toList();
     });
 
-    backgroundColor = generatedColors[0];
     rotationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 200));
     opacityController = AnimationController(
@@ -104,10 +108,14 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
 
   void _removeCard() {
     setState(() {
-      cards.removeAt(0);
+      if (currentIndex + 1 < cards.length) {
+        currentIndex += 1;
+      } else {
+        currentIndex = 0;
+      }
 
-      colorIndex += 1;
-      backgroundColor = generatedColors[colorIndex % 10];
+      currentCard = cards[currentIndex];
+      backgroundColor = generatedColors[currentIndex];
 
       rotationController.forward();
       opacityController.forward();
@@ -126,10 +134,16 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
     return Scaffold(
       backgroundColor: backgroundColor.withOpacity(0.3),
       body: FutureBuilder<List<SlidableAnimatedCard>>(
-        future: friendlyCards.then((value) => cards = value).whenComplete(
-            () => Future.delayed(const Duration(milliseconds: 500))),
+        future: friendlyCards.then((value) => cards = value).whenComplete(() {
+          return Future.delayed(const Duration(milliseconds: 500));
+        }),
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+            if (isFirstTime) {
+              currentCard = cards.first;
+              isFirstTime = false;
+            }
+
             return AnimatedBuilder(
               animation: rotationController,
               builder: (BuildContext context, Widget? child) {
@@ -167,7 +181,7 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
                               child: Opacity(
                                   opacity:
                                       isOpacity ? opacityAnimation.value : 1,
-                                  child: cards.first))
+                                  child: currentCard))
                           : Container(),
                     )
                   ],

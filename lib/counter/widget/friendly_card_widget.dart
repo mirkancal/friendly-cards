@@ -32,7 +32,7 @@ class FriendlyCardWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               Text(
-                careCard.title as String,
+                (careCard.title as String).toString().trim(),
                 style: const TextStyle(
                     fontSize: 50,
                     color: Colors.white,
@@ -40,7 +40,7 @@ class FriendlyCardWidget extends StatelessWidget {
                 textAlign: TextAlign.left,
               ),
               Text(
-                careCard.body as String,
+                (careCard.body as String).toString().trim(),
                 style: const TextStyle(fontSize: 18, color: Colors.white),
                 textAlign: TextAlign.left,
               ),
