@@ -6,7 +6,7 @@ import 'package:friendly_cards/counter/widget/slidable_animated_card.dart';
 import 'package:friendly_cards/models/friendly_card.dart';
 import 'package:friendly_cards/services/friendly_cards_service.dart';
 import 'package:loading_animations/loading_animations.dart';
-
+import '../../extensions/context_extension.dart';
 import 'friendly_card_widget.dart';
 
 class SlidableAnimatedCardsList extends StatefulWidget {
@@ -139,13 +139,21 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
                       alignment: Alignment.center,
                       child: Transform.rotate(
                         angle: rotationAnimation.value,
-                        child: Card(
-                          color: const Color(0xFF705F67),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6)),
-                          child: Container(
-                            height: 450,
-                            width: 300,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 24.0),
+                          child: Card(
+                            color: const Color(0xFF705F67),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6)),
+                            child: Container(
+                              height: context.currentSize.height > 700
+                                  ? context.currentSize.height > 800
+                                      ? 450
+                                      : 400
+                                  : context.dynamicHeight(0.65),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24.0),
+                            ),
                           ),
                         ),
                       ),
@@ -167,18 +175,26 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
           }
 
           return Center(
-            child: Card(
-              color: const Color(0xFF705F67),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6)),
-              child: Container(
-                height: 450,
-                width: 300,
-                child: Center(
-                  child: LoadingJumpingLine.square(
-                    size: 60,
-                    duration: const Duration(milliseconds: 600),
-                    backgroundColor: friendlyCardColorList[0],
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Card(
+                color: const Color(0xFF705F67),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6)),
+                child: Container(
+                  height: context.currentSize.height > 700
+                      ? context.currentSize.height > 800
+                          ? 450
+                          : 400
+                      : context.dynamicHeight(0.65),
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  width: 300,
+                  child: Center(
+                    child: LoadingJumpingLine.square(
+                      size: 60,
+                      duration: const Duration(milliseconds: 600),
+                      backgroundColor: friendlyCardColorList[0],
+                    ),
                   ),
                 ),
               ),
