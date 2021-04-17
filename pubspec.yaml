@@ -20,6 +20,9 @@ dependencies:
   loading_animations: ^2.2.0
   responsive_builder: ^0.4.1
 
+  device_preview: ^0.7.1
+  flutter_launcher_icons: ^0.9.0
+  auto_size_text: ^3.0.0-nullsafety.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

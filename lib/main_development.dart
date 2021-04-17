@@ -8,11 +8,10 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:bloc/bloc.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:bloc/bloc.dart';
-import 'package:friendly_cards/app/app.dart';
 import 'package:friendly_cards/app/app_bloc_observer.dart';
 import 'package:friendly_cards/app/app_development.dart';
 

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:friendly_cards/models/friendly_card.dart';
 import '../../extensions/context_extension.dart';
@@ -12,37 +13,57 @@ class FriendlyCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dynamicHeight = context.currentSize.height > 700
+        ? context.currentSize.height > 800
+            ? context.currentSize.height > 850
+                ? 450
+                : 400
+            : 400
+        : context.dynamicHeight(0.55);
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Card(
         color: color,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
         child: Container(
-          height: context.currentSize.height > 700
-              ? context.currentSize.height > 800
-                  ? context.currentSize.height > 850
-                      ? 450
-                      : 400
-                  : 400
-              : context.dynamicHeight(0.65),
+          height: dynamicHeight.toDouble(),
+          width: context.currentSize.width * .7,
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
-              Text(
-                (careCard.title as String).toString().trim(),
-                style: const TextStyle(
-                    fontSize: 50,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
-                textAlign: TextAlign.left,
+              const Spacer(
+                flex: 2,
               ),
-              Text(
-                (careCard.body as String).toString().trim(),
-                style: const TextStyle(fontSize: 18, color: Colors.white),
-                textAlign: TextAlign.left,
+              Container(
+                height: dynamicHeight.toDouble() * .5,
+                child: AutoSizeText(
+                  (careCard.title as String).toString().trim(),
+                  style: const TextStyle(
+                      fontSize: 40,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                  softWrap: true,
+                  wrapWords: true,
+                  maxFontSize: 50,
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Container(
+                height: dynamicHeight.toDouble() / 3,
+                child: AutoSizeText(
+                  (careCard.body as String).toString().trim(),
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                  textAlign: TextAlign.left,
+                  softWrap: true,
+                ),
+              ),
+              const Spacer(
+                flex: 2,
               ),
             ],
           ),
