@@ -69,6 +69,7 @@ class CardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Width: ${context.width}, Height: ${context.height}');
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: 30.0,
@@ -83,11 +84,7 @@ class CardContent extends StatelessWidget {
           Text(
             careCard.title!.trim(),
             style: TextStyle(
-                fontSize: context.width <= 320
-                    ? 35
-                    : context.width >= 360
-                        ? 50
-                        : 40,
+                fontSize: context.width <= 320 ? 30 : 40,
                 color: Colors.white,
                 fontWeight: FontWeight.bold),
             textAlign: TextAlign.left,
