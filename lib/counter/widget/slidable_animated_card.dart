@@ -103,16 +103,16 @@ class _SlidableAnimatedCardState extends State<SlidableAnimatedCard>
 }
 
 double rotateCardByOffset(Offset offset) {
-  // print('Offset.dx: ${offset.dx},  Offset.dy: ${offset.dy}');
+  // print(' Offset.dy: ${offset.dy}, Offset.dx: ${offset.dx}');
   if (offset.dy > 0 && offset.dx > 0) {
     var rotationAngle = offset.dx / 100 > 1 ? 1 : offset.dx / 100;
     return -(pi * 1 / 10) * rotationAngle;
   } else if (offset.dy > 0 && offset.dx < 0) {
-    var rotationAngle = offset.dx / 100 > 1 ? 1 : offset.dx / 100;
-    return -(pi * 1 / 10) * rotationAngle;
+    var rotationAngle = (offset.dx / 100).abs() > 1 ? 1 : offset.dx / 100;
+    return (pi * 1 / 10) * rotationAngle.abs();
   } else if (offset.dy < 0 && offset.dx < 0) {
-    var rotationAngle = offset.dx / 100 > 1 ? 1 : offset.dx / 100;
-    return -(pi * 1 / 10) * rotationAngle;
+    var rotationAngle = (offset.dx / 100).abs() > 1 ? 1 : offset.dx / 100;
+    return (pi * 1 / 10) * rotationAngle.abs();
   } else if (offset.dy < 0 && offset.dx > 0) {
     var rotationAngle = offset.dx / 100 > 1 ? 1 : offset.dx / 100;
     return -(pi * 1 / 10) * rotationAngle;
