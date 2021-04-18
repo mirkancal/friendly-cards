@@ -194,9 +194,9 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
             child: CardShape(
               color: const Color(0xFF705F67),
               child: Center(
-                child: LoadingJumpingLine.square(
+                child: LoadingJumpingLine.circle(
                   size: 60,
-                  duration: const Duration(milliseconds: 600),
+                  duration: const Duration(milliseconds: 400),
                   backgroundColor: friendlyCardColorList[0],
                 ),
               ),
