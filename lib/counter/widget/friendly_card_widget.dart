@@ -36,6 +36,11 @@ class CardShape extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(''
+        '*********************************\n'
+        'Height: ${context.height}, Width: ${context.width}\n'
+        '*********************************');
+
     return LayoutBuilder(
       builder: (context, constraints) {
         return Card(
@@ -43,10 +48,12 @@ class CardShape extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: Container(
-            height: context.height * 0.65 >= 500 ? 500 : context.height * 0.65,
+            height: context.height * 0.60 >= 500 ? 450 : context.height * 0.60,
             width: getValueForScreenType<double>(
               context: context,
-              mobile: constraints.maxWidth <= 320 ? 260 : 320,
+              mobile: constraints.maxWidth * 0.85 >= 400
+                  ? 320
+                  : constraints.maxWidth * 0.80,
               tablet: 375,
               desktop: 375,
             ),
@@ -88,8 +95,8 @@ class CardContent extends StatelessWidget {
                 fontWeight: FontWeight.bold),
             textAlign: TextAlign.left,
           ),
-          SizedBox(height: context.height * 0.1),
-          Container(
+          SizedBox(height: context.height * 0.08),
+          Flexible(
             child: Text(
               careCard.body!.trim(),
               style: TextStyle(
