@@ -32,7 +32,9 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
   late final AnimationController rotationController;
   late final AnimationController opacityController;
   late final TweenSequence tweenRotation;
-  late final Animation<double> rotationAnimation;
+  late final Animation<double> transitionRotation;
+  late final Animation<double> foregroundCardRotationAnimation;
+  late final Animation<double> backgroundCardRotationAnimation;
   late final Animation<double> opacityAnimation;
 
   late final FriendlyCardsService friendlyCardsService;
@@ -70,28 +72,39 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
     });
 
     rotationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 200));
+        vsync: this, duration: const Duration(milliseconds: 250));
     opacityController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 200));
+        vsync: this, duration: const Duration(milliseconds: 250));
 
     opacityAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(
-        parent: opacityController, curve: const Interval(0.4, 1)));
+    ).animate(CurvedAnimation(parent: opacityController, curve: Curves.easeIn));
 
-    rotationAnimation = Tween<double>(
-      begin: 0,
+    transitionRotation = Tween<double>(
       end: pi / 30,
+      begin: 0,
+    ).animate(CurvedAnimation(
+        parent: rotationController, curve: const Interval(0.2, 1)));
+
+    foregroundCardRotationAnimation = Tween<double>(
+      begin: pi / 30,
+      end: 0,
+    ).animate(CurvedAnimation(
+        parent: rotationController, curve: const Interval(0.2, 1)));
+
+    backgroundCardRotationAnimation = Tween<double>(
+      begin: pi / 30,
+      end: 0,
     ).animate(CurvedAnimation(
         parent: rotationController, curve: const Interval(0.2, 1)));
 
     rotationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        isRotation = true;
+        isRotation = false;
         rotationController.reverse();
       } else if (status == AnimationStatus.forward) {
-        isRotation = false;
+        isRotation = true;
       }
     });
 
@@ -141,6 +154,7 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             if (isFirstTime) {
               currentCard = cards.first;
+              rotationController.forward();
               isFirstTime = false;
             }
 
@@ -152,7 +166,7 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
                     Align(
                       alignment: Alignment.center,
                       child: Transform.rotate(
-                        angle: rotationAnimation.value,
+                        angle: backgroundCardRotationAnimation.value,
                         child: const CardShape(
                           color: Color(0xFF705F67),
                         ),
@@ -161,7 +175,9 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
                     Positioned(
                       child: cards.isNotEmpty
                           ? Transform.rotate(
-                              angle: rotationAnimation.value,
+                              angle: isRotation
+                                  ? foregroundCardRotationAnimation.value
+                                  : 0,
                               child: Opacity(
                                   opacity:
                                       isOpacity ? opacityAnimation.value : 1,
@@ -175,29 +191,13 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
           }
 
           return Center(
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Card(
-                color: const Color(0xFF705F67),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6)),
-                child: Container(
-                  height: context.currentSize.height > 700
-                      ? context.currentSize.height > 800
-                          ? context.currentSize.height > 850
-                              ? 450
-                              : 400
-                          : 400
-                      : context.dynamicHeight(0.55),
-                  width: context.currentSize.width * .7,
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Center(
-                    child: LoadingJumpingLine.square(
-                      size: 60,
-                      duration: const Duration(milliseconds: 600),
-                      backgroundColor: friendlyCardColorList[0],
-                    ),
-                  ),
+            child: CardShape(
+              color: const Color(0xFF705F67),
+              child: Center(
+                child: LoadingJumpingLine.circle(
+                  size: 60,
+                  duration: const Duration(milliseconds: 400),
+                  backgroundColor: friendlyCardColorList[0],
                 ),
               ),
             ),

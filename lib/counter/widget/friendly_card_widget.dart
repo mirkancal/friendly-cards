@@ -43,10 +43,10 @@ class CardShape extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: Container(
-            height: context.height * 0.7 >= 500 ? 500 : context.height * 0.7,
+            height: context.height * 0.65 >= 500 ? 500 : context.height * 0.65,
             width: getValueForScreenType<double>(
               context: context,
-              mobile: constraints.maxWidth <= 320 ? 285 : 320,
+              mobile: constraints.maxWidth <= 320 ? 260 : 320,
               tablet: 375,
               desktop: 375,
             ),
@@ -81,7 +81,7 @@ class CardContent extends StatelessWidget {
         children: [
           const SizedBox(height: 30),
           Text(
-            careCard.title!,
+            careCard.title!.trim(),
             style: TextStyle(
                 fontSize: context.width <= 320 ? 30 : 40,
                 color: Colors.white,
@@ -91,8 +91,14 @@ class CardContent extends StatelessWidget {
           SizedBox(height: context.height * 0.1),
           Container(
             child: Text(
-              (careCard.body as String).toString().trim(),
-              style: const TextStyle(fontSize: 16, color: Colors.white),
+              careCard.body!.trim(),
+              style: TextStyle(
+                  fontSize: context.width <= 320
+                      ? 14
+                      : context.width >= 360
+                          ? 18
+                          : 16,
+                  color: Colors.white),
               textAlign: TextAlign.left,
               softWrap: true,
             ),
