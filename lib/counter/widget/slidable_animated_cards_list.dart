@@ -45,8 +45,8 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
   late List<SlidableAnimatedCard> loopedCards;
 
   List<Color> randomColorGenerator(int amount) {
-    return List.generate(amount, (index) => friendlyCardColorList[index % 7])
-        .toList();
+    var shuffledColors = colors..shuffle();
+    return List.generate(amount, (index) => shuffledColors[index % 7]).toList();
   }
 
   @override
@@ -197,7 +197,7 @@ class _SlidableAnimatedCardsListState extends State<SlidableAnimatedCardsList>
                 child: LoadingJumpingLine.circle(
                   size: 60,
                   duration: const Duration(milliseconds: 400),
-                  backgroundColor: friendlyCardColorList[0],
+                  backgroundColor: colors[0],
                 ),
               ),
             ),

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-const List<Color> friendlyCardColorList = [
+final List<Color> colors = [
   Color(0xFF93DA8A),
   Color(0xFF90D5D0),
   Color(0xFF26A988),

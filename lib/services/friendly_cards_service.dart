@@ -9,12 +9,12 @@ class FriendlyCardsService {
 
   Future<List<FriendlyCard>> getFriendlyCards() async {
     try {
-      final data = await rootBundle.loadString('assets/friendly_cards.json');
+      final rawString =
+          await rootBundle.loadString('assets/friendly_cards.json');
 
-      final body = json.decode(data);
+      final data = (json.decode(rawString) as List)..shuffle();
 
-      final friendlyCards =
-          (body as List).map((e) => FriendlyCard.fromJson(e)).toList();
+      final friendlyCards = data.map((e) => FriendlyCard.fromJson(e)).toList();
       return friendlyCards;
     } catch (e) {
       print(e);
