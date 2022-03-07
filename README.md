@@ -1,5 +1,7 @@
 # Friendly Cards
 
+https://friendlycards.io/#/
+
 [![Very Good Ventures][logo]][very_good_ventures_link]
 
 Developed with 💙 by [Very Good Ventures][very_good_ventures_link] 🦄
