@@ -9,7 +9,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:friendly_cards/app/app_bloc_observer.dart';
@@ -22,8 +21,7 @@ void main() {
   };
 
   runZonedGuarded(
-    () => runApp(DevicePreview(
-        enabled: !kReleaseMode, builder: (context) => const AppDevelopment())),
+    () => runApp(const App()),
     (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
   );
 }
